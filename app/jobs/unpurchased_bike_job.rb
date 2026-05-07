@@ -11,7 +11,7 @@ class UnpurchasedBikeJob < ApplicationJob
         )
         order.update!(status: :forfeited)
         order.bike.update!(status: :expired)
-        Notification.create!(user: bid.user, kind: :payment_due,
+        Notification.create!(user: bid.user, transaction_type: :payment_due,
                              message: "Order ##{order.id} forfeited; deposit lost.")
       end
     end

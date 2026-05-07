@@ -1,8 +1,21 @@
 class Transaction < ApplicationRecord
   belongs_to :wallet
 
-  enum :kind, { credit: 0, debit: 1, lock: 2, unlock: 3, penalty: 4 }
-  enum :status, { pending: 0, completed: 1, failed: 2, reversed: 3 }
+  # Correct syntax for Rails 8
+  enum :transaction_type, {
+    credit: 0,
+    debit: 1,
+    lock: 2,      # renamed from lock
+    unlock: 3,   # renamed from unlock
+    penalty: 4
+  }, prefix: :tx
+
+  enum :status, {
+    pending: 0,
+    completed: 1,
+    failed: 2,
+    reversed: 3
+  }
 
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :reference, presence: true, uniqueness: true

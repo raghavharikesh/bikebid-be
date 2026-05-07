@@ -2,21 +2,22 @@ module Api
   module V1
     class WalletsController < ApplicationController
       def show
-        render_success current_user.wallet.as_json(methods: [:available])
+        wallet = current_user.wallet
+        render json: { success: true, data: WalletSerializer.new(wallet).serializable_hash[:data][:attributes] }
       end
 
       def deposit
-        WalletService.new(current_user.wallet).credit!(
-          params[:amount].to_d, reference: "DEP-#{SecureRandom.hex(4).upcase}"
-        )
-        render_success current_user.wallet.reload
+        amount = params[:amount].to_d
+        raise ArgumentError, 'Amount must be positive' if amount <= 0
+        WalletService.new(current_user.wallet).credit!(amount, reference: "DEP-#{SecureRandom.hex(4).upcase}")
+        render json: { success: true, data: WalletSerializer.new(current_user.wallet.reload).serializable_hash[:data][:attributes], message: 'Deposit successful' }
       end
 
       def withdraw
-        WalletService.new(current_user.wallet).debit!(
-          params[:amount].to_d, reference: "WD-#{SecureRandom.hex(4).upcase}"
-        )
-        render_success current_user.wallet.reload
+        amount = params[:amount].to_d
+        raise ArgumentError, 'Amount must be positive' if amount <= 0
+        WalletService.new(current_user.wallet).debit!(amount, reference: "WD-#{SecureRandom.hex(4).upcase}")
+        render json: { success: true, data: WalletSerializer.new(current_user.wallet.reload).serializable_hash[:data][:attributes], message: 'Withdrawal successful' }
       end
     end
   end

@@ -12,7 +12,7 @@ class AuctionService
         status: :pending_payment
       )
       bike.update!(status: :sold)
-      Notification.create!(user: winner_bid.user, kind: :won,
+      Notification.create!(user: winner_bid.user, transaction_type: :won,
                            message: "You won #{bike.make} #{bike.model}! Pay within 3 days.")
       order
     end

@@ -43,8 +43,8 @@ class WalletService
 
   private
 
-  def tx(kind, amount, reference)
-    Transaction.create!(wallet: @wallet, kind: kind, amount: amount,
+  def tx(transaction_type, amount, reference)
+    Transaction.create!(wallet: @wallet, transaction_type: transaction_type, amount: amount,
                         status: :completed, reference: reference)
   end
 end

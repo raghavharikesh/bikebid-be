@@ -7,6 +7,8 @@ class Bike < ApplicationRecord
   has_one    :order, dependent: :nullify
   has_one    :rto_verification, dependent: :destroy
   has_many   :service_histories, dependent: :destroy
+  has_many   :bike_questions, dependent: :destroy
+  has_many   :reviews, dependent: :destroy
   has_many_attached :photos
 
   enum :bike_type, {
@@ -32,5 +34,5 @@ class Bike < ApplicationRecord
   def highest_bid       = bids.order(amount: :desc).first
   def current_price     = highest_bid&.amount || starting_price
   def auction_ended?    = auction_ends_at.present? && auction_ends_at <= Time.current
-  def electric?         = fuel_type == "electric"
+  def ev?               = fuel_type == "electric"
 end

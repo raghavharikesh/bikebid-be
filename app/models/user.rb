@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :bikes, foreign_key: :seller_id, dependent: :destroy
   has_many :bids, dependent: :destroy
   has_many :orders, foreign_key: :buyer_id, dependent: :destroy
+  has_many :bike_bundles, foreign_key: :seller_id, dependent: :destroy
   has_many :addresses, as: :addressable, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :disputes, dependent: :destroy
@@ -18,8 +19,8 @@ class User < ApplicationRecord
 
   after_create :create_wallet_record
 
-  def admin?       = role == "admin"
-  def technician?  = role == "technician"
+  # NOTE: enum :role already provides admin? and technician? predicates
+  # No need to redefine them
 
   private
 
